@@ -1,0 +1,17 @@
+{
+    "name": "fillipp/test",
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "app\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "daOrkz",
+            "email": "fillippok87@gmail.com"
+        }
+    ]
+}

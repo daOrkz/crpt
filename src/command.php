@@ -5,6 +5,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHP.php to edit this template
  */
 
+$config = include './config.php';
+
 // :: - optional
 // longopts --
 // shortopts -
@@ -22,6 +24,14 @@ if(!empty($opts)){
         $file = $opts["c"];
         
         $filePath = getFileName($file);
+        $pass = trim(readline("Please enter password for encrypt:"));
+
+        $contents = file_get_contents($file);
+        $contetsEncrypted = openssl_encrypt($contents, $config["method"], $pass);
+        
+        $fileEncrypted = 'encrypted.txt';
+        $pathToFile = $filePath['path'] . $fileEncrypted;
+        file_put_contents($pathToFile, $contetsEncrypted);
         
         echo 'crypt ' . $filePath['name'] . "\n";
     }
@@ -31,6 +41,14 @@ if(!empty($opts)){
         $file = $opts["d"];
         
         $filePath = getFileName($file);
+        $pass = trim(readline("Please enter password for decrypt:"));
+
+        $contents = file_get_contents($file);
+        $contentsDecrypted = openssl_decrypt($contents, $config["method"], $pass);
+        
+        $fileDecrypted = 'decrypted.txt';
+        $pathToFile = $filePath['path'] . $fileDecrypted;
+        file_put_contents($pathToFile, $contentsDecrypted);
         
         echo 'decrypt ' . $filePath['name'] . "\n";
     }
@@ -55,10 +73,6 @@ switch ($command) {
     case "q":
         fprintf(STDOUT, "Exit..." . PHP_EOL, $command);
         exit;
-    default:
-        echo "Not found command. --help fo help \n";
-        exit;
-        break;
 }
 
 function createDir($path){

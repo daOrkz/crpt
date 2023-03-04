@@ -10,7 +10,7 @@ $config = include './config.php';
 // :: - optional
 // longopts --
 // shortopts -
-$shortopts = "c:r::d:r::d";
+$shortopts = "c:d:r:p:";
 $longopts = ["help", "crypt"];
 $opts = getopt($shortopts, $longopts);
 
@@ -29,12 +29,27 @@ if(!empty($opts)){
         $contents = file_get_contents($file);
         $contetsEncrypted = openssl_encrypt($contents, $config["method"], $pass);
         
-        $fileEncrypted = 'encrypted.txt';
+        
+        
+        if(isset($opts["p"])){
+            $file = $opts["p"];
+
+            $filePath = getFileName($file);
+            
+            $pathToFile = $filePath['path'];
+            $fileEncrypted = $filePath['name'];
+
+            createDir($pathToFile);
+            createFile($pathToFile, $fileEncrypted);
+            
+        } else $fileEncrypted = 'encrypted.txt';
+        
         $pathToFile = $filePath['path'] . $fileEncrypted;
         file_put_contents($pathToFile, $contetsEncrypted);
         
         echo 'crypt ' . $filePath['name'] . "\n";
     }
+    
     // decrypt
     if (isset($opts["d"])) {
         
@@ -52,10 +67,24 @@ if(!empty($opts)){
         
         echo 'decrypt ' . $filePath['name'] . "\n";
     }
-    // delete file
+    
+    // путь для сохранения расшифрованного файла
+    if (isset($opts["op"])) {
+        $file = $opts["op"];
+        
+        $filePath = getFileName($file);
+
+        $pathToFile = $filePath['path'];
+        $fileEncrypted = $filePath['name'];
+        
+        createDir($pathToFile);
+        createFile($pathToFile, $fileEncrypted);
+    }
+    
+    // remove specified file
     if (isset($opts["r"])) {
-//        $file = $opts["d"] ? $opts["d"] : $opts["c"];
-        $file = $opts["d"] ?: $opts["c"];
+        $file = isset($opts["d"]) ? $opts["d"] : $opts["c"];
+//        $file = $opts["d"] ?: $opts["c"];
         
         $filePath = getFileName($file);
         
@@ -78,6 +107,24 @@ switch ($command) {
 function createDir($path){
     $output = shell_exec("mkdir -pv {$path}");
     echo "$output";
+}
+
+function createFile($path, $fileName){
+    shell_exec("cd {$path}");
+    
+    shell_exec("touch {$path}{$fileName}");
+    
+    echo "File {$fileName} created\n";
+}
+
+function createFileToPath($file){
+        $filePath = getFileName($file);
+
+        $pathToFile = $filePath['path'];
+        $fileEncrypted = $filePath['name'];
+        
+        createDir($pathToFile);
+        createFile($pathToFile, $fileEncrypted);
 }
 
 function getFileName($path){

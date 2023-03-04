@@ -61,7 +61,18 @@ if(!empty($opts)){
         $contents = file_get_contents($file);
         $contentsDecrypted = openssl_decrypt($contents, $config["method"], $pass);
         
-        $fileDecrypted = 'decrypted.txt';
+        if(isset($opts["p"])){
+            $file = $opts["p"];
+
+            $filePath = getFileName($file);
+            
+            $pathToFile = $filePath['path'];
+            $fileDecrypted = $filePath['name'];
+
+            createDir($pathToFile);
+            createFile($pathToFile, $fileEncrypted);
+            
+        } else $fileDecrypted = 'decrypted.txt';
         $pathToFile = $filePath['path'] . $fileDecrypted;
         file_put_contents($pathToFile, $contentsDecrypted);
         

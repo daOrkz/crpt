@@ -10,8 +10,8 @@ $config = include './config.php';
 // :: - optional
 // longopts --
 // shortopts -
-$shortopts = "c:h:d:r:p:";
-$longopts = ["help", "crypt"];
+$shortopts = "c:h:d:r:p:m::";
+$longopts = ["help", "www"];
 $opts = getopt($shortopts, $longopts);
 
 
@@ -57,6 +57,8 @@ if(!empty($opts)){
         $contents = file_get_contents($file);
         $contentsDecrypted = openssl_decrypt($contents, $config["method"], $pass);
         
+
+        
         if(isset($opts["p"])){
             $file = $opts["p"];
 
@@ -71,6 +73,9 @@ if(!empty($opts)){
         $pathToFile = $filePath['path'] . $filePath['name'];
         file_put_contents($pathToFile, $contentsDecrypted);
         
+        if(isset($opts['m'])){
+            openNano($pathToFile);
+        }
         echo 'decrypt ' . $filePath['name'] . "\n";
     }
     
@@ -88,14 +93,15 @@ if(!empty($opts)){
     }
     
     // remove specified file
-    if (isset($opts["r"])) {
-        $file = isset($opts["d"]) ? $opts["d"] : $opts["c"];
-//        $file = $opts["d"] ?: $opts["c"];
-        
-        $filePath = getFileName($file);
-        
-        echo 'delete ' . $filePath['name'] . "\n";
-    }
+//    if (isset($opts["r"])) {
+//        $file = isset($opts["d"]) ? $opts["d"] : $opts["c"];
+////        $file = $opts["d"] ?: $opts["c"];
+//        
+//        $filePath = getFileName($file);
+//        
+//        echo 'delete ' . $filePath['name'] . "\n";
+//    }
+    
     
     if (isset($opts["help"])) {
         echo <<<END
@@ -109,6 +115,8 @@ if(!empty($opts)){
                     -p  указать путь для перемещения файла, если не указать, 
                         то файл будет зашифрован/расшифрован в текущую папку.  
                         Будет использовано имя по умолчанию
+        
+                    -m=r  открыть файл в nano
                     \n
             END;
         exit;
@@ -161,4 +169,11 @@ function getFileName($path){
     if($lengh > 1) $path .= '/';
     
     return ['path' => $path, 'name' => $fileName];
+}
+
+function openNano($content){
+    
+    $args[] = $content;
+    pcntl_exec('/usr/bin/nano', $args);
+    
 }

@@ -5,6 +5,5 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHP.php to edit this template
  */
 
-$arr = ['h' => false];
+pcntl_exec('/usr/bin/nano', ['~/note.txt']);
 
-echo isset($arr['h']);

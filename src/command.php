@@ -38,7 +38,7 @@ if(!empty($opts)){
             
             createFileToPath($filePath);
             
-        } else $fileEncrypted = $filePath['name'] . '-encrypted.txt';
+        } else $filePath['name'] = preg_replace('/\.[^.]+$/','',$filePath['name']) .'-encrypted.txt';
         
         $pathToFile = $filePath['path'] . $filePath['name'];
         file_put_contents($pathToFile, $contetsEncrypted);
@@ -63,7 +63,11 @@ if(!empty($opts)){
             $filePath = getFileName($file);
             createFileToPath($filePath);
             
-        } else $fileDecrypted = $filePath['name'] . '-decrypted.txt';
+        } else {
+            $filePath['name'] = str_replace('-encrypted', '', $filePath['name']);
+            $filePath['name'] = preg_replace('/\.[^.]+$/','',$filePath['name']) .'-decrypted.txt';
+            
+        }
         $pathToFile = $filePath['path'] . $filePath['name'];
         file_put_contents($pathToFile, $contentsDecrypted);
         

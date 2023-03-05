@@ -10,7 +10,7 @@ $config = include './config.php';
 // :: - optional
 // longopts --
 // shortopts -
-$shortopts = "c:d:r:p:";
+$shortopts = "c:h:d:r:p:";
 $longopts = ["help", "crypt"];
 $opts = getopt($shortopts, $longopts);
 
@@ -95,6 +95,23 @@ if(!empty($opts)){
         $filePath = getFileName($file);
         
         echo 'delete ' . $filePath['name'] . "\n";
+    }
+    
+    if (isset($opts["help"])) {
+        echo <<<END
+                    \n
+                    Справка для crypt.
+
+                    -c  зашифровать указанный файл
+
+                    -d  расшифровать указанный файл
+
+                    -p  указать путь для перемещения файла, если не указать, 
+                        то файл будет зашифрован/расшифрован в текущую папку.  
+                        Будет использовано имя по умолчанию
+                    \n
+            END;
+        exit;
     }
 }
 

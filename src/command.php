@@ -36,15 +36,11 @@ if(!empty($opts)){
 
             $filePath = getFileName($file);
             
-            $pathToFile = $filePath['path'];
-            $fileEncrypted = $filePath['name'];
-
-            createDir($pathToFile);
-            createFile($pathToFile, $fileEncrypted);
+            createFileToPath($filePath);
             
-        } else $fileEncrypted = 'encrypted.txt';
+        } else $fileEncrypted = $filePath['name'] . '-encrypted.txt';
         
-        $pathToFile = $filePath['path'] . $fileEncrypted;
+        $pathToFile = $filePath['path'] . $filePath['name'];
         file_put_contents($pathToFile, $contetsEncrypted);
         
         echo 'crypt ' . $filePath['name'] . "\n";
@@ -65,15 +61,10 @@ if(!empty($opts)){
             $file = $opts["p"];
 
             $filePath = getFileName($file);
+            createFileToPath($filePath);
             
-            $pathToFile = $filePath['path'];
-            $fileDecrypted = $filePath['name'];
-
-            createDir($pathToFile);
-            createFile($pathToFile, $fileEncrypted);
-            
-        } else $fileDecrypted = 'decrypted.txt';
-        $pathToFile = $filePath['path'] . $fileDecrypted;
+        } else $fileDecrypted = $filePath['name'] . '-decrypted.txt';
+        $pathToFile = $filePath['path'] . $filePath['name'];
         file_put_contents($pathToFile, $contentsDecrypted);
         
         echo 'decrypt ' . $filePath['name'] . "\n";
@@ -128,14 +119,13 @@ function createFile($path, $fileName){
     echo "File {$fileName} created\n";
 }
 
-function createFileToPath($file){
-        $filePath = getFileName($file);
+function createFileToPath($filePath){
 
         $pathToFile = $filePath['path'];
-        $fileEncrypted = $filePath['name'];
+        $fileName = $filePath['name'];
         
         createDir($pathToFile);
-        createFile($pathToFile, $fileEncrypted);
+        createFile($pathToFile, $fileName);
 }
 
 function getFileName($path){

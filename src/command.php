@@ -15,12 +15,11 @@ $longopts = ["help", "www"];
 $opts = getopt($shortopts, $longopts);
 
 
-
 if(!empty($opts)){
 
     // crypt
     if (isset($opts["c"])) {
-        
+                
         $file = $opts["c"];
         
         $filePath = getFileName($file);
